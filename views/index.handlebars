@@ -1,0 +1,59 @@
+{#css}}
+  <link rel="stylesheet" href="{{@path}}">
+{{/css}}
+
+<h1 class="hello"> Burger Menu </h1>
+
+<h2>Pick Something off the Menu To Eat!</h2>
+
+<ul>
+  {{#each burgers}}
+    {{#unless this.eaten}}
+      <li>
+        {{this.name}}
+
+
+        <form action="/{{this.id}}?_method=PUT" method="POST">
+          <input type="hidden" name="eaten" value="true">
+          <button type="submit">Mmmmmm, I pick This One!</button>
+        </form>
+
+      </li>
+    {{/unless}}
+  {{/each}}
+</ul>
+
+<h2>Eaten Burgers</h2>
+
+<ul>
+  {{#each burgers}}
+    {{#if this.eaten}}
+      <li>
+        {{this.name}}
+        <form action="/{{this.id}}?_method=PUT" method="POST">
+          <input type="hidden" name="eaten" value="false">
+          <button type="submit">Make More!</button>
+        </form>
+        {{> burgers/delete-burger}}
+      </li>
+    {{/if}}
+  {{/each}}
+</ul>
+
+<h2>Add a Burger</h2>
+<form class="create-update-form" action="/" method="POST">
+
+  <div class="form-group">
+    <label for="ca" placeholder="Burger Name">Burger Name:</label>
+    <input type="text" id="ca" name="name">
+  </div>
+
+  <div class="form-group">
+    <label for="slee">Eaten?</label><br>
+    <input type="radio" name="sleepy" value="1" checked> Already Taken!<br>
+    <input type="radio" name="sleepy" value="0"> Available!
+     <button type="submit">Add Burger</button>
+  </div>
+
+ 
+</form>
