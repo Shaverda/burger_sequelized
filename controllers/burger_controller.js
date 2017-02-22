@@ -1,48 +1,33 @@
 var express = require('express');
+var db = require('../models');
 var router = express.Router();
-var colors = require('colors');
 
-var burger = require("../models/burger.js");
 
-router.get("/", function(req, res) {
-  burger.all(function(data) {
-    var hbsObject = {
-      burgers: data
-    };
-    console.log(hbsObject.red);
-    res.render("index", hbsObject);
-  });
+router.get("/", (req, res) => {
+	db.Burger.findAll({}).then(function(data) {
+		res.render("index", {burgers: data});
+	});
 });
 
-router.post("/", function(req, res) {
-  burger.create([
-    "name"
-  ], [
-    req.body.name
-  ], function() {
-    res.redirect("/");
-  });
+router.post("/", (req, res) => {
+	db.Burger.create({
+		burger_name: req.body.name
+	}).then(() => {
+		res.redirect("/");
+	});
 });
 
-router.put("/:id", function(req, res) {
-  var condition = "id = " + req.params.id;
-
-  console.log("condition", condition);
-
-  burger.update({
-    eaten: req.body.eaten
-  }, condition, function() {
-    res.redirect("/");
-  });
+router.put("/:id", (req, res) => {
+	db.Burger.update({
+		devoured: true
+	}, {
+		where: {
+			id: req.params.id
+		}
+	}).then(() => {
+		res.redirect("/");
+	});
 });
 
-router.delete("/:id", function(req, res) {
-  var condition = "id = " + req.params.id;
-
-  burger.delete(condition, function() {
-    res.redirect("/");
-  });
-});
-
-// Export routes for server.js to use.
 module.exports = router;
+
